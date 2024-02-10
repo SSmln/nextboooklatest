@@ -1,113 +1,153 @@
-import Image from "next/image";
+import type { GetStaticProps, InferGetStaticPropsType, NextPage } from "next";
+import Link from "next/link";
+import Text from "@/components/atoms/Text";
+import Box from "@/components/layout/Box";
+import Flex from "@/components/layout/Flex";
+import ProductCard from "@/components/organisms/ProductCard";
+// import ProductCardCarousel from "@/components/organisms/ProductCardCarousel";
+// import Layout from "@/components/templates/Layout";
+// import getAllProducts from "services/products/get-all-products";
+import ProductCardCarousel from "@/components/organisms/ProductCardCarousel";
+// eslint-disable-next-line import/order
+import Layout from "@/components/templates/Layout";
 
-export default function Home() {
+import getAllProducts from "@/services/products/get-all-products";
+import { ApiContext, Product } from "@/types";
+
+type HomePageProps = InferGetStaticPropsType<typeof getStaticProps>;
+
+const HomePage: NextPage<HomePageProps> = ({
+  bookProducts,
+  clothesProducts,
+  shoesProducts,
+}: HomePageProps) => {
+  // 상품 카드 캐러셀을 렌더링
+  const renderProductCardCarousel = (products: Product[]) => {
+    return (
+      <>
+        {" "}
+        <ProductCardCarousel>
+          {products.map((p: Product, i: number) => (
+            <Box paddingLeft={i === 0 ? 0 : 2} key={p.id}>
+              <Link href={`/products/${p.id}`} passHref>
+                <div>
+                  <ProductCard
+                    variant="small"
+                    title={p.title}
+                    price={p.price}
+                    imageUrl={p.imageUrl}
+                    blurDataUrl={p.blurDataUrl}
+                  />
+                </div>
+              </Link>
+            </Box>
+          ))}
+        </ProductCardCarousel>
+      </>
+    );
+  };
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <>
+      <Layout>
+        <Flex padding={2} justifycontent="center" backgroundcolor="primary">
+          <Flex
+            width={{ base: "100%", md: "1040px" }}
+            justifycontent="space-between"
+            alignitems="center"
+            flexdirection={{ base: "column", md: "row" }}
           >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
-
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-full sm:before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full sm:after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px] z-[-1]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Explore starter templates for Next.js.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50 text-balance`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+            <Box width="100%">
+              <Text as="h1" marginbottom={0} color="white" variant="extraLarge">
+                Wiki C2C에서
+              </Text>
+              <Text as="h1" margintop={0} color="white" variant="extraLarge">
+                마음에 드는 아이템을 찾자
+              </Text>
+            </Box>
+            <Box width="100%">
+              <Text as="p" color="white" variant="mediumLarge">
+                Wiki C2C는 실전적인 Next.js 애플리케이션 개발에서 사용되는 데모
+                애플리케이션입니다. 목 서버를 사용하고 있습니다. 소스 코드는
+                <Text
+                  as="a"
+                  style={{ textDecoration: "underline" }}
+                  target="_blank"
+                  href="https://github.com/moseskim/ts-nextbook-app"
+                  variant="mediumLarge"
+                  color="white"
+                >
+                  다음
+                </Text>
+                의 Github에서 다운로드 할 수 있습니다.
+              </Text>
+              <Text as="p" color="white" variant="mediumLarge">
+                이 애플리케이션은 TypeScript/Next.js로 작성되어 있으며, 백엔드의
+                목 API는 json-server가 사용되고 있습니다.
+              </Text>
+            </Box>
+          </Flex>
+        </Flex>
+        <Flex paddingbottom={2} justifycontent="center">
+          <Box
+            paddingleft={{ base: 2, md: 0 }}
+            paddingright={{ base: 2, md: 0 }}
+            width={{ base: "100%", md: "1040px" }}
+          >
+            <Box marginbottom={3}>
+              <Text as="h2" variant="large">
+                의류
+              </Text>
+              {renderProductCardCarousel(clothesProducts)}
+            </Box>
+            <Box marginbottom={3}>
+              <Text as="h2" variant="large">
+                책
+              </Text>
+              {renderProductCardCarousel(bookProducts)}
+            </Box>
+            <Box>
+              <Text as="h2" variant="large">
+                신발
+              </Text>
+              {renderProductCardCarousel(shoesProducts)}
+            </Box>
+          </Box>
+        </Flex>
+      </Layout>
+    </>
   );
-}
+};
+// export const getStaticProps = (async (context) => {
+//   const res = await fetch('https://api.github.com/repos/vercel/next.js')
+//   const repo = await res.json()
+//   return { 
+//  props: { repo } 
+//  }
+// }) satisfies GetStaticProps<{
+//   repo: Repo
+// }>
+
+export const getStaticProps: GetStaticProps = async () => {
+  const context: ApiContext = {
+    apiRootUrl: process.env.API_BASE_URL || "http://localhost:5000",
+  };
+  // 각 상품의 톱 6개를 얻어, 정적 페이지를 작성
+  // 60초 동안 revalidate 상태로 하고, 정적 페이지를 업데이트한다
+  const [clothesProducts, bookProducts, shoesProducts] = await Promise.all([
+    getAllProducts(context, { category: "clothes", limit: 6, page: 1 }),
+    getAllProducts(context, { category: "book", limit: 6, page: 1 }),
+    getAllProducts(context, { category: "shoes", limit: 6, page: 1 }),
+  ]);
+
+  return {
+    props: {
+      clothesProducts,
+      bookProducts,
+      shoesProducts,
+    },
+    revalidate: 60,
+  };
+};
+
+export default HomePage;
